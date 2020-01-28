@@ -45,15 +45,10 @@ from airflow.operators.python_operator import PythonOperator
 
 pp = pprint.PrettyPrinter(indent=4)
 
-args = {
-    'start_date': airflow.utils.dates.days_ago(2),
-    'owner': 'airflow',
-}
+args = {"start_date": airflow.utils.dates.days_ago(2), "owner": "airflow"}
 
 dag = DAG(
-    dag_id='example_trigger_target_dag',
-    default_args=args,
-    schedule_interval=None,
+    dag_id="example_trigger_target_dag", default_args=args, schedule_interval=None
 )
 
 
@@ -63,21 +58,21 @@ def run_this_func(**kwargs):
 
     :param dict kwargs: Context
     """
-    print("Remotely received value of {} for key=message".
-          format(kwargs['dag_run'].conf['message']))
+    print(
+        "Remotely received value of {} for key=message".format(
+            kwargs["dag_run"].conf["message"]
+        )
+    )
 
 
 run_this = PythonOperator(
-    task_id='run_this',
-    provide_context=True,
-    python_callable=run_this_func,
-    dag=dag,
+    task_id="run_this", provide_context=True, python_callable=run_this_func, dag=dag
 )
 
 # You can also access the DagRun object in templates
 bash_task = BashOperator(
     task_id="bash_task",
     bash_command='echo "Here is the message: '
-                 '{{ dag_run.conf["message"] if dag_run else "" }}" ',
+    '{{ dag_run.conf["message"] if dag_run else "" }}" ',
     dag=dag,
 )

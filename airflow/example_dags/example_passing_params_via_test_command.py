@@ -28,11 +28,8 @@ from airflow.operators.python_operator import PythonOperator
 
 dag = DAG(
     "example_passing_params_via_test_command",
-    default_args={
-        "owner": "airflow",
-        "start_date": airflow.utils.dates.days_ago(1),
-    },
-    schedule_interval='*/1 * * * *',
+    default_args={"owner": "airflow", "start_date": airflow.utils.dates.days_ago(1)},
+    schedule_interval="*/1 * * * *",
     dagrun_timeout=timedelta(minutes=4),
 )
 
@@ -44,8 +41,12 @@ def my_py_command(**kwargs):
     -tp '{"foo":"bar"}'`
     """
     if kwargs["test_mode"]:
-        print(" 'foo' was passed in via test={} command : kwargs[params][foo] \
-               = {}".format(kwargs["test_mode"], kwargs["params"]["foo"]))
+        print(
+            " 'foo' was passed in via test={} command : kwargs[params][foo] \
+               = {}".format(
+                kwargs["test_mode"], kwargs["params"]["foo"]
+            )
+        )
     # Print out the value of "miff", passed in below via the Python Operator
     print(" 'miff' was passed in via task params = {}".format(kwargs["params"]["miff"]))
     return 1
@@ -57,7 +58,7 @@ my_templated_command = """
 """
 
 run_this = PythonOperator(
-    task_id='run_this',
+    task_id="run_this",
     provide_context=True,
     python_callable=my_py_command,
     params={"miff": "agg"},
@@ -65,7 +66,7 @@ run_this = PythonOperator(
 )
 
 also_run_this = BashOperator(
-    task_id='also_run_this',
+    task_id="also_run_this",
     bash_command=my_templated_command,
     params={"miff": "agg"},
     dag=dag,

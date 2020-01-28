@@ -23,20 +23,10 @@ import airflow
 from airflow.models import DAG
 from airflow.operators.pig_operator import PigOperator
 
-args = {
-    'owner': 'airflow',
-    'start_date': airflow.utils.dates.days_ago(2),
-}
+args = {"owner": "airflow", "start_date": airflow.utils.dates.days_ago(2)}
 
-dag = DAG(
-    dag_id='example_pig_operator',
-    default_args=args,
-    schedule_interval=None,
-)
+dag = DAG(dag_id="example_pig_operator", default_args=args, schedule_interval=None)
 
 run_this = PigOperator(
-    task_id="run_example_pig_script",
-    pig="ls /;",
-    pig_opts="-x local",
-    dag=dag,
+    task_id="run_example_pig_script", pig="ls /;", pig_opts="-x local", dag=dag
 )
