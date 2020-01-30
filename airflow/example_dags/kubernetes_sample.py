@@ -26,7 +26,7 @@ start = DummyOperator(task_id="run_this_first", dag=dag)
 
 passing = KubernetesPodOperator(
     namespace="airflow",
-    image="3.7.6-stretch",
+    image="python:3.7.6-stretch",
     cmds=["Python", "-c"],
     arguments=["print('hello world')"],
     labels={"foo": "bar"},
